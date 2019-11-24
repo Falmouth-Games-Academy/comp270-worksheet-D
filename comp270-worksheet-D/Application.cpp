@@ -105,17 +105,17 @@ void Application::processEvent(const SDL_Event &ev)
 			
 			// Player movement
 			if (state[SDL_SCANCODE_LEFT])
-				m_player.rotate(-0.1f);
+				m_player.rotate(-c_shipRotateSpeed);
 
 			if (state[SDL_SCANCODE_RIGHT])
-				m_player.rotate(0.1f);
+				m_player.rotate(c_shipRotateSpeed);
 
 			if (state[SDL_SCANCODE_UP])
-				m_player.applyThrust(0.5f);
+				m_player.applyThrust(c_shipThrust);
 
 			// Trigger
 			if (ev.key.keysym.sym == SDLK_SPACE)
-				shoot(0.5f);
+				shoot(c_shipShootVelocity);
 		}
 		break;
 	}
@@ -129,8 +129,10 @@ void Application::setupScene()
 {
 	m_player.setPosition(c_windowWidth / 2, c_windowHeight / 2);
 
+	int numInitialAsteriods = c_debuging ? c_debug_numInitialAsteriods : c_numInitialAsteriods;
+
 	// Create some initial asteroids, anywhere on the screen and heading in any direction
-	for (unsigned i = 0; i < c_numInitialAsteriods; ++i)
+	for (unsigned i = 0; i < numInitialAsteriods; ++i)
 	{
 		Point2D pos(rand() % c_windowWidth, rand() % c_windowHeight);
 		Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
@@ -145,6 +147,8 @@ void Application::update()
 {
 	m_player.update();
 
+	debugUpdate();
+
 	// Move the bullets to their new positions
 	for (auto& bullet : m_bullets)
 	{
@@ -152,7 +156,7 @@ void Application::update()
 	}
 
 	// Spawn asteroids from the corners, heading inwards
-	if (rand() % 100 < c_spawnRate)
+	if (!c_debuging && rand() % 100 < c_spawnRate)
 	{
 		bool left = rand() % 100 > 50;
 		bool top = rand() % 100 > 50;
@@ -237,6 +241,28 @@ bool Application::isOffscreen(const Drifter * drifter) const
 {
 	Point2D pos = drifter->getPosition();
 	return (pos.x < 0.0f || pos.x > c_windowWidth || pos.y < 0.0f || pos.y > c_windowHeight);
+}
+
+// Debug
+void Application::debugUpdate()
+{
+
+	if (!c_debuging) return;
+
+	// fire bullets and reset
+	if (!m_debug_fireringRest && m_debug_bulletsFired <= c_debug_bulletsToFire)
+	{
+		shoot(c_shipShootVelocity);
+		m_debug_bulletsFired++;
+		m_player.rotate(-c_shipRotateSpeed);
+		if (m_debug_bulletsFired == c_debug_bulletsToFire)
+			m_debug_fireringRest = true;
+	}
+	else if (!c_fireOneRound && m_debug_fireringRest && --m_debug_bulletsFired == 0)
+	{
+		m_debug_fireringRest = false;
+	}
+
 }
 
 // Application entry point

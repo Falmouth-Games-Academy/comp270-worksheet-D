@@ -26,6 +26,11 @@ private:
 	const int c_windowWidth = 800;
 	const int c_windowHeight = 700;
 
+	// Ship controles settings
+	const float c_shipRotateSpeed = 0.1f;
+	const float c_shipThrust = 0.5f;
+	const float c_shipShootVelocity = 0.5f;
+
 	// Asteroid generation settings
 	const int c_spawnRate = 1;				// Likelihood of a new asteroid being spawned each update
 	const int c_numInitialAsteriods = 10;	// Number of asteroids when the game starts
@@ -42,4 +47,18 @@ private:
 	std::vector<Asteroid> m_asteroids;
 
 	bool m_quit = false;
+
+	// Debuging and preformance testing options
+	void debugUpdate();
+
+	const bool c_debuging = true;
+
+	const int c_debug_numInitialAsteriods = 1000;	// why not :)
+	const int c_debug_bulletsToFire = 100;
+	const bool c_fireOneRound = true;
+	int m_debug_bulletsFired = 0;
+	bool m_debug_fireringRest = false;
+
+	
+
 };
