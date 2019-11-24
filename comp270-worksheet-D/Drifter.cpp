@@ -9,7 +9,7 @@ void Drifter::update()
 	{
 		// Update the position, and anything the derived class wants to
 		m_position = m_position + m_velocity;
-		updateExtra();
+//		updateExtra();	// Access violation ??
 	}
 }
 
@@ -36,6 +36,7 @@ void Asteroid::draw(SDL_Renderer * renderer) const
 		// Find the local points in world space by applying a matrix transformation
 		Matrix2D worldTransform;
 		worldTransform.setTransform(m_position, m_rotation);
+
 		Point2D worldVerts[NumVerts];
 		for (unsigned i = 0; i < NumVerts; ++i)
 			worldVerts[i] = worldTransform * m_localVerts[i];
@@ -43,6 +44,7 @@ void Asteroid::draw(SDL_Renderer * renderer) const
 		// Draw the transformed points
 		for (unsigned i = 0; i < NumVerts - 1; ++i)
 			SDL_RenderDrawLineF(renderer, worldVerts[i].x, worldVerts[i].y, worldVerts[i + 1].x, worldVerts[i + 1].y);
+
 		SDL_RenderDrawLineF(renderer, worldVerts[NumVerts - 1].x, worldVerts[NumVerts - 1].y, worldVerts[0].x, worldVerts[0].y);
 	}
 }
