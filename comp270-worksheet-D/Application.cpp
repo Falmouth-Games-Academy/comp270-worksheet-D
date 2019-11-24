@@ -156,7 +156,7 @@ void Application::update()
 	}
 
 	// Spawn asteroids from the corners, heading inwards
-	if (!c_debuging && rand() % 100 < c_spawnRate)
+	if (rand() % 100 < c_spawnRate)
 	{
 		bool left = rand() % 100 > 50;
 		bool top = rand() % 100 > 50;
