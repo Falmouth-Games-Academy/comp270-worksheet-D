@@ -52,6 +52,8 @@ void Asteroid::draw(SDL_Renderer * renderer) const
 // Returns true if the given point is currently inside the Asteroid, false if not.
 bool Asteroid::pointIsInside(Point2D point) const
 {
+	if ((point - m_position).magnitude() > 50)
+		return false;
 	// Find the local points in world space by applying a matrix transformation
 	Matrix2D worldTransform;
 	worldTransform.setTransform(m_position, m_rotation);
