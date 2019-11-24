@@ -56,6 +56,7 @@ private:
 	const int c_debug_numInitialAsteriods = 1000;	// why not :)
 	const int c_debug_bulletsToFire = 100;
 	const bool c_fireOneRound = true;
+
 	int m_debug_bulletsFired = 0;
 	bool m_debug_fireringRest = false;
 

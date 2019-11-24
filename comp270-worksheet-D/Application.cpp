@@ -254,7 +254,10 @@ void Application::debugUpdate()
 	{
 		shoot(c_shipShootVelocity);
 		m_debug_bulletsFired++;
+		// rotate so we hit more astroids sooner
 		m_player.rotate(-c_shipRotateSpeed);
+		m_player.applyThrust(c_shipThrust);
+
 		if (m_debug_bulletsFired == c_debug_bulletsToFire)
 			m_debug_fireringRest = true;
 	}
@@ -262,6 +265,8 @@ void Application::debugUpdate()
 	{
 		m_debug_fireringRest = false;
 	}
+
+	// Spwan more astroids??
 
 }
 
