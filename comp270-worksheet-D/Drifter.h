@@ -19,6 +19,7 @@ public:
 	bool		isAlive() const { return m_alive; }
 
 	void update();
+	void virtual resetObject(Point2D position, Vector2D velocity);
 	void kill() { m_alive = false; }
 
 	// Derived types should draw themselves
@@ -56,7 +57,10 @@ public:
 	virtual void draw(SDL_Renderer * renderer) const;
 
 	float	getScale() const { return m_scale; }
+	void	setScale( float scale ) { m_scale = scale; }
+	void	setRotationSpeed(float speed) { m_rotationSpeed = speed; }
 	bool	pointIsInside(Point2D point) const;
+
 
 protected:
 	// Increase the rotation by a fixed amount each time update() is called.

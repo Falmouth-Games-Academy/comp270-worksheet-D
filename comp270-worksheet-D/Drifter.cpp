@@ -13,6 +13,17 @@ void Drifter::update()
 	}
 }
 
+void Drifter::resetObject(Point2D position, Vector2D velocity)
+{
+	if (m_alive) return;
+
+	// set the new position and velocity 
+	m_position = position;
+	m_velocity = velocity;
+
+	m_alive = true;	// i will rule the world!
+}
+
 // A Bullet is just a dot
 void Bullet::draw(SDL_Renderer * renderer) const
 {

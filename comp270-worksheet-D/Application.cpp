@@ -175,6 +175,14 @@ void Application::update()
 	{
 		if (asteroid.isAlive())
 		{
+
+			// make sure the asteroid is still on the screen
+			if (isOffscreen(&asteroid))
+			{
+				asteroid.kill();	// we might as well kill it, its not coming back. as the velocity does not change
+				continue;
+			}
+
 			// Move the asteroid to its new position
 			asteroid.update();
 
@@ -183,19 +191,31 @@ void Application::update()
 			{
 				if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
 				{
-					// Shatter the asteroid by killing it and spawning some new ones
-					// roughly where it is
-					unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
-					for (unsigned i = 0; i < numFragments; ++i)
-					{
-						Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
-						vel.normalise();
-						vel *= (rand() % 5) / 8 + 0.2f;
 
-						Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid.getScale();
-						spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments-1));
+					// make sure the bullet is still on the screen
+					if (isOffscreen(&bullet))
+					{
+						bullet.kill();
+						continue;
 					}
 
+					// only shatter the asteroid if its larger than the min scale.
+					if (asteroid.getScale() > c_asteroidMinScale)
+					{
+						// Shatter the asteroid by killing it and spawning some new ones
+						// roughly where it is
+						unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
+						for (unsigned i = 0; i < numFragments; ++i)
+						{
+							Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
+							vel.normalise();
+							vel *= (rand() % 5) / 8 + 0.2f;
+
+							Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid.getScale();
+							spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments - 1));
+							
+						}
+					}
 					asteroid.kill();
 					bullet.kill();
 					break;
@@ -226,14 +246,46 @@ void Application::render()
 
 void Application::shoot(float speed)
 {
-	Bullet bullet(m_player.getGunPosition(), m_player.getDirection() * (m_player.getSpeed() + speed));
+
+	Point2D gunPos = m_player.getGunPosition();
+	Vector2D bulletSpeed = m_player.getDirection() * (m_player.getSpeed() + speed);
+
+	// find a dead bullet
+	for (int i = 0; i < m_bullets.size(); i++)
+		if (!m_bullets[i].isAlive())
+		{
+			m_bullets[i].resetObject(gunPos, bulletSpeed);
+
+			return;
+		}
+
+	Bullet bullet(gunPos, bulletSpeed);
 	m_bullets.push_back(bullet);
 }
 
 void Application::spawnAsteroid(Point2D pos, Vector2D vel, float maxScale)
 {
-	Asteroid asteroid(pos, vel, float(rand() % 10) * maxScale / 15.0f + maxScale * 0.25f,
-		float(rand() % 10) * c_asteroidMaxRotationSpeed / 5.0f - c_asteroidMaxRotationSpeed);
+
+	// make sure we dont go below the min scale.
+	float scale = float(rand() % 10) * maxScale / 15.0f + maxScale * 0.25f;
+	if (scale < c_asteroidMinScale) scale = c_asteroidMinScale;
+
+	float rotationSpeed = float(rand() % 10) * c_asteroidMaxRotationSpeed / 5.0f - c_asteroidMaxRotationSpeed;
+
+	// find a dead astroid and respawn.
+	for (int i = 0; i < m_asteroids.size(); i++)
+		if ( !m_asteroids[i].isAlive() )
+		{
+			m_asteroids[i].resetObject(pos, vel);
+			m_asteroids[i].setScale(scale);
+			m_asteroids[i].setRotationSpeed(rotationSpeed);
+
+			return;
+		}
+
+	// add one if we have run out of astroids.
+	Asteroid asteroid(pos, vel, scale, rotationSpeed);
+
 	m_asteroids.push_back(asteroid);
 }
 
