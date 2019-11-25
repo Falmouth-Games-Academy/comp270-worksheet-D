@@ -175,14 +175,14 @@ void Application::update()
 	{
 		if (asteroid.isAlive())
 		{
-
+			/*
 			// make sure the asteroid is still on the screen
 			if (isOffscreen(&asteroid))
 			{
 				asteroid.kill();	// we might as well kill it, its not coming back. as the velocity does not change
 				continue;
 			}
-
+			*/
 			// Move the asteroid to its new position
 			asteroid.update();
 
@@ -191,17 +191,17 @@ void Application::update()
 			{
 				if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
 				{
-
+					/*
 					// make sure the bullet is still on the screen
 					if (isOffscreen(&bullet))
 					{
 						bullet.kill();
 						continue;
 					}
-
+					*/
 					// only shatter the asteroid if its larger than the min scale.
-					if (asteroid.getScale() > c_asteroidMinScale)
-					{
+					//if (asteroid.getScale() > c_asteroidMinScale)
+					//{
 						// Shatter the asteroid by killing it and spawning some new ones
 						// roughly where it is
 						unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
@@ -215,7 +215,7 @@ void Application::update()
 							spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments - 1));
 							
 						}
-					}
+					//}
 					asteroid.kill();
 					bullet.kill();
 					break;
@@ -268,7 +268,7 @@ void Application::spawnAsteroid(Point2D pos, Vector2D vel, float maxScale)
 
 	// make sure we dont go below the min scale.
 	float scale = float(rand() % 10) * maxScale / 15.0f + maxScale * 0.25f;
-	if (scale < c_asteroidMinScale) scale = c_asteroidMinScale;
+	//if (scale < c_asteroidMinScale) scale = c_asteroidMinScale;
 
 	float rotationSpeed = float(rand() % 10) * c_asteroidMaxRotationSpeed / 5.0f - c_asteroidMaxRotationSpeed;
 
