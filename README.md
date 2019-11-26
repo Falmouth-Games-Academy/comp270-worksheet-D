@@ -39,7 +39,7 @@ The amount of initial asteroids and bullets to firer are defined just below.
 
 #### #1 (d)
 Benchmark CPU
-> ![CPU-MinSize](/Screenshoots/CPU%20-%20[Bench].png]
+> ![CPU-MinSize](/Screenshoots/CPU%20-%20[Bench].png)
 > Looking at the test results we can see that  
 > - Application::Update is taking up the most time. but its only spending ~1.2% in the function it self.
 > - after that Asteroid::PointInside is taking the longest (which is called from Application::Update)
@@ -48,19 +48,19 @@ Benchmark CPU
 
 #### #1 (e)
 Benchmark Memory
-> ![CPU-MinSize](/Screenshoots/MEM%20-%20[Bench].png]
+> ![CPU-MinSize](/Screenshoots/MEM%20-%20[Bench].png)
 > The memory is continually increasing since we are constantly add bullets and asteroids to their respected vectors.
 
 
 #### #2 (a) (implemented last)
 > After implementing the barycentric Convex collision method there is a slight performance increase. I choose this since convex collision is one of the faster methods, but it is not most accurate, but accurate enough.
 
-![CPU-MinSize](/Screenshoots/CPU%20-%20[Convex].png]
+![CPU-MinSize](/Screenshoots/CPU%20-%20[Convex].png)
 
 
 #### #2 (b) (implemented with angles test and after the object recycling/pooling was implemented)
 
-![CPU-MinSize](/Screenshoots/CPU%20-%20[ErlyExit].png]
+![CPU-MinSize](/Screenshoots/CPU%20-%20[ErlyExit].png)
 
 
 #### #3 (a)
@@ -106,16 +106,16 @@ But the bullet vector is still increasing even after fire a large number of bull
 
 #### 4 (b)
 after implementing destroy when off screen, we can see that we spend less time in the update function as a whole and that the memory allocation is not pretty much stable
-![CPU-MinSize](/Screenshoots/CPU%20-%20[OffScreen].png]
-![CPU-MinSize](/Screenshoots/MEM%20-%20[OffScreen].png]
+![CPU-MinSize](/Screenshoots/CPU%20-%20[OffScreen].png)
+![CPU-MinSize](/Screenshoots/MEM%20-%20[OffScreen].png)
 
 After working out the worldVerts of the asteroid in the same loop as drawing we can see that we spend ~400units less time in the draw function. 
-![CPU-MinSize](/Screenshoots/CPU%20-%20[vertAndDraw].png]
+![CPU-MinSize](/Screenshoots/CPU%20-%20[vertAndDraw].png)
 
 
 Final Test results
 CPU
-![CPU-MinSize](/Screenshoots/MEM%20-%20[all%20ops].png]
+![CPU-allops](/Screenshoots/CPU%20-%20[all%20ops].png)
 
 #####################
 
