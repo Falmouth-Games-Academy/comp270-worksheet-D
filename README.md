@@ -116,7 +116,7 @@ cons:
 > CPU
 ![CPU-allops](/Screenshoots/CPU%20-%20[all%20ops].png)
 
-#####################
+---
 
 All Test where performed using the "Angle Summation Test"
 Testing conditions:
