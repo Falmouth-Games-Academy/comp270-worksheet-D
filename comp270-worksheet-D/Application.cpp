@@ -189,7 +189,7 @@ void Application::update()
 			// See if any of the (live) bullets are inside this asteroid
 			for (auto& bullet : m_bullets)
 			{
-				if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
+				if (bullet.isAlive() && asteroid.pointIsInside_convex(bullet.getPosition()))
 				{
 					
 					// make sure the bullet is still on the screen

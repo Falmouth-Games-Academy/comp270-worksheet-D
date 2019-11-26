@@ -60,13 +60,17 @@ public:
 	void	setScale( float scale ) { m_scale = scale; }
 	void	setRotationSpeed(float speed) { m_rotationSpeed = speed; }
 	bool	pointIsInside(Point2D point) const;
-
+	bool	pointIsInside_convex(Point2D point) const;
 
 protected:
 	// Increase the rotation by a fixed amount each time update() is called.
 	virtual void updateExtra() { m_rotation += m_rotationSpeed; }
 
 private:
+
+	
+	bool barycentricCollision(Point2D point, Point2D tri_origin, Point2D triPoint_b, Point2D triPoint_c) const;
+
 	// Vertices of the player's shape in local space
 	static const unsigned NumVerts = 10;
 	Point2D m_localVerts[NumVerts] = { Point2D(0.0f, 1.2f), Point2D(0.6f, 0.9f),

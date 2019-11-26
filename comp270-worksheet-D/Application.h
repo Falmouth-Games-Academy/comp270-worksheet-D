@@ -54,8 +54,8 @@ private:
 
 	const bool c_debuging = true;
 
-	const int c_debug_numInitialAsteriods = 1000;	// why not :)
-	const int c_debug_bulletsToFire = 150;
+	const int c_debug_numInitialAsteriods = 10000;	// why not :)
+	const int c_debug_bulletsToFire = 500;
 	const bool c_fireOneRound = false;
 
 	int m_debug_bulletsFired = 0;

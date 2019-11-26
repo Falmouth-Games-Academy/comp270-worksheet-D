@@ -120,3 +120,60 @@ bool Asteroid::pointIsInside(Point2D point) const
 
 	return fmod( fabs(angle) + M_PI, 4.0f * M_PI ) > 2.0f * M_PI;
 }
+
+bool Asteroid::pointIsInside_convex(Point2D point) const
+{
+
+	if ((point - m_position).magnitude() > 50) return false;
+
+	Matrix2D worldTransform;
+	worldTransform.setTransform(m_position, m_rotation);
+	Point2D worldVerts[NumVerts];
+
+	// only find the first two verts in world space. we'll get the reset just befor we work out the collision.
+	for (unsigned i = 0; i < 2; ++i)
+		worldVerts[i] = worldTransform * m_localVerts[i];
+
+	// we can start from point 2, since there must be three edges to a triangle
+	for (unsigned i = 2; i < NumVerts - 1; ++i)
+	{
+		worldVerts[i] = worldTransform * m_localVerts[i];
+
+		if (barycentricCollision(point, worldVerts[0], worldVerts[i - 1], worldVerts[i]))	// find if we are in a triangle
+			return true;	
+
+	}
+
+	return false;
+
+}
+
+bool Asteroid::barycentricCollision(Point2D point, Point2D tri_origin, Point2D triPoint_b, Point2D triPoint_c) const
+{
+	// barycentric works by defining a origin on the plance that connects to the other to edges
+	// then we can get any position with the plan by move along (b-origin) or (c-Origin)
+	// if x/y is < 0 we have not reached the object yet, if x/y > 1 then we have pased the edge.
+	// if the sum of x/y is > 1 then we have also left the tri.
+
+	// find vectors
+	Vector2D dif_pointBOrigin = triPoint_b - tri_origin;
+	Vector2D dif_pointCOrigin = triPoint_c - tri_origin;
+	Vector2D dif_pointOrigin = point - tri_origin;
+
+	// Get the dot products
+	// TODO Cache.
+	float dot_CC = dif_pointCOrigin.dot(dif_pointCOrigin);
+	float dot_CB = dif_pointCOrigin.dot(dif_pointBOrigin);
+	float dot_COrigin = dif_pointCOrigin.dot(dif_pointOrigin);
+	float dot_BB = dif_pointBOrigin.dot(dif_pointBOrigin);
+	float dot_BOrigin = dif_pointBOrigin.dot(dif_pointOrigin);
+
+	// find the coords
+	float denorm = 1.0f / (dot_CC * dot_BB - dot_CB * dot_CB);	// cache
+	float x = (dot_BB * dot_COrigin - dot_CB * dot_BOrigin) * denorm;
+	float y = (dot_CC * dot_BOrigin - dot_CB * dot_COrigin) * denorm;
+
+
+	// is point in tri?
+	return x >= 0 && y >= 0 && (x + y < 1); // we dont have to check if X or Y is > 1 since we must check X+Y < 1
+}
