@@ -19,6 +19,7 @@ public:
 	bool		isAlive() const { return m_alive; }
 
 	void update();
+	void virtual resetObject(Point2D position, Vector2D velocity);
 	void kill() { m_alive = false; }
 
 	// Derived types should draw themselves
@@ -56,13 +57,20 @@ public:
 	virtual void draw(SDL_Renderer * renderer) const;
 
 	float	getScale() const { return m_scale; }
+	void	setScale( float scale ) { m_scale = scale; }
+	void	setRotationSpeed(float speed) { m_rotationSpeed = speed; }
 	bool	pointIsInside(Point2D point) const;
+	bool	pointIsInside_convex(Point2D point) const;
 
 protected:
 	// Increase the rotation by a fixed amount each time update() is called.
 	virtual void updateExtra() { m_rotation += m_rotationSpeed; }
 
 private:
+
+	
+	bool barycentricCollision(Point2D point, Point2D tri_origin, Point2D triPoint_b, Point2D triPoint_c) const;
+
 	// Vertices of the player's shape in local space
 	static const unsigned NumVerts = 10;
 	Point2D m_localVerts[NumVerts] = { Point2D(0.0f, 1.2f), Point2D(0.6f, 0.9f),
@@ -74,4 +82,7 @@ private:
 	float m_rotation = 0.0f;		// Current rotation angle
 	float m_rotationSpeed = 0.001f;	// Amount by which to 
 	float m_scale = 1.0f;			// Asteroid's size (scale applied to the vertices)
+
+	// Debuging
+	bool const c_debug_drawCollider = false;
 };
