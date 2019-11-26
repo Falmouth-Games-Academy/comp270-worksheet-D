@@ -106,7 +106,7 @@ But the bullet vector is still increasing even after fire a large number of bull
 
 #### 4 (b)
 after implementing destroy when off screen, we can see that we spend less time in the update function as a whole and that the memory allocation is not pretty much stable
-![CPU-MinSize](/Screenshoots/CPU%20-%20[OffScreen].png)
+![CPU-MinSize](/Screenshoots/CPU%20-%20[offScreen].png)
 ![CPU-MinSize](/Screenshoots/MEM%20-%20[OffScreen].png)
 
 After working out the worldVerts of the asteroid in the same loop as drawing we can see that we spend ~400units less time in the draw function. 
