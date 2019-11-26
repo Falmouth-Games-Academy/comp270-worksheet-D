@@ -175,14 +175,14 @@ void Application::update()
 	{
 		if (asteroid.isAlive())
 		{
-			/*
+			
 			// make sure the asteroid is still on the screen
 			if (isOffscreen(&asteroid))
 			{
 				asteroid.kill();	// we might as well kill it, its not coming back. as the velocity does not change
 				continue;
 			}
-			*/
+			
 			// Move the asteroid to its new position
 			asteroid.update();
 
@@ -191,14 +191,14 @@ void Application::update()
 			{
 				if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
 				{
-					/*
+					
 					// make sure the bullet is still on the screen
 					if (isOffscreen(&bullet))
 					{
 						bullet.kill();
 						continue;
 					}
-					*/
+					
 					// only shatter the asteroid if its larger than the min scale.
 					if (asteroid.getScale() > c_asteroidMinScale)
 					{
