@@ -87,15 +87,15 @@ Or you could do the same thing with a vector so you can add to it if you run out
 #### #3 (d)
 So now asteroids and bullets are re-used after they have been killed, there is not all that much different and the memory still increases.
 
-(CUP-array)[/screenshoots/CPU - [Array].jpg]
-(MEM-array)[/screenshoots/Mem - [Array].jpg]
+![CUP-array](/Screenshoots/CPU%20-%20[Array].png)
+![MEM-array](/Screenshoots/MEM%20-%20[Array].png)
 
 i think this will be because there is no min size on asteroids, so we keep splitting them making more and more. some will be re-used, but more will be added.
 
 After implementing the min size, we can that the memory is more stable now, and the performance is much smoother :)
 
-(CPU-MinSize)[/screenshoots/CPU - [MinSize].jpg]
-(MEM-MinSize)[/screenshoots/CPU - [MinSize].jpg]
+[CPU-MinSize](/Screenshoots/CPU%20-%20[MinSize].png)
+[MEM-MinSize](/Screenshoots/MEM%20-%20[MinSize].png)
 
 But the bullet vector is still increasing even after fire a large number of bullets. I think this could be due to bullets being drawn/updated when off the screen.
 
