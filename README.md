@@ -38,3 +38,51 @@ if you hold down the spacebar it continuely fires every frame. if you do this wh
 #### #1 (d)
 
 #### #1 (e)
+
+#### #3 (a)
+Pros:
+> "maximum" (within reason)
+
+cons:
+
+#### #3 (b)
+> there are less objects active in the scene than in the vector. This is because objects are not recycled and used again nor removed from the vector/scene. This affects the preformance since it has to resize the vectors when elements are added and the memory will incress overtime as the objects are not removed.
+
+#### #3 (c)
+> 1. you could use a fixed array and fill the array with objects set to not alive. Then you would do a look up to find the fist object that is not active, move that obejct to the "spawn" location bring it back to life.  
+On the down side this would mean you would have a limited number of objects to spawn;
+Or you could do the same thing with a vector so you can add to it if you run out of objects, maybe it would be better to resize the vector larger than the amount of object that are going to be added so there are less reallocation (im going to benchmark it!)
+...  
+  
+2. I guess you could removed/delete the objects from the vector. :`(
+
+#### #3 (d)
+So now asteroids and bullets are re-used after they have been killed, there is not all that much differents and the memmory still icresses.
+
+(CUP-array)[/screenshoots/CPU - [Array].jpg]
+(MEM-array)[/screenshoots/Mem - [Array].jpg]
+
+i think this will be because there is no min size on asdroids so we keep spliting them makeing more and more. some will be re-used, but more will be added.
+
+After implermenting the min size we can that the memory is more stable now, and the preformance is much smoother :)
+
+(CPU-MinSize)[/screenshoots/CPU - [MinSize].jpg]
+(MEM-MinSize)[/screenshoots/CPU - [MinSize].jpg]
+
+But the bullet vector is still incressing even affter fire a larg amount of bullets. i think this could be due to bullets being dwarn/updated when off the screen.
+
+#### 4 (a)
+> asdroids have min size.
+> objects should be destroyed when off the screen
+> ...
+
+#### 4 (b)
+affter implermenting destroy when off screen, 
+
+
+
+
+#####################
+All Test...
+
+
