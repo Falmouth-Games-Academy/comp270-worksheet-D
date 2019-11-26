@@ -18,6 +18,9 @@ bool Application::run()
 		return false;
 
 	setupScene();
+	//test case timer
+	int* timer = new int();
+	*timer = clock();
 
 	// Main loop
 	m_quit = false;
@@ -29,6 +32,8 @@ bool Application::run()
 		{
 			processEvent(ev);
 		}
+
+		runTestCase(timer, 250, 0.05f, 1.0f);
 
 		// Render current state
 		update();
@@ -84,6 +89,41 @@ void Application::shutdownSDL()
 	}
 
 	SDL_Quit();
+}
+
+void Application::runTestCase(int* timer, float interval, float rotationSpeed, float shotpeed)
+{
+	m_player.rotate(rotationSpeed);
+
+	while (clock() - *timer >= interval)
+	{
+		// Update asteroids and check for collisions with bullets
+		for (auto& asteroid : m_asteroids)
+		{
+			if (asteroid.isAlive())
+			{
+				// Shatter the asteroid by killing it and spawning some new ones
+				// roughly where it is
+				unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
+				for (unsigned i = 0; i < numFragments; ++i)
+				{
+					Vector2D vel(float(rand() % 100) * 0.02f - 1.0f, float(rand() % 100) * 0.02f - 1.0f);
+					vel.normalise();
+					vel *= (rand() % 5) / 8 + 0.2f;
+
+					Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) * 0.2f - 1.0f, float(rand() % 10) * 0.2f - 1.0f) * asteroid.getScale();
+					spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments - 1));
+				}
+
+				asteroid.kill();
+				break;
+			}
+		}
+
+		shoot(shotpeed);
+
+		*timer = clock();
+	}
 }
 
 // Process a single event

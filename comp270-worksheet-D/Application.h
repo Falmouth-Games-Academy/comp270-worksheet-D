@@ -14,6 +14,8 @@ private:
 	bool initSDL();
 	void shutdownSDL();
 
+	void runTestCase(int* timer, float interval, float rotationSpeed, float shotpeed);
+
 	void processEvent(const SDL_Event &e);
 	void setupScene();
 	void update();
@@ -25,6 +27,8 @@ private:
 
 	const int c_windowWidth = 800;
 	const int c_windowHeight = 700;
+
+	int* timer = 0;
 
 	// Asteroid generation settings
 	const int c_spawnRate = 1;				// Likelihood of a new asteroid being spawned each update

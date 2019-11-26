@@ -11,6 +11,6 @@ I think most of the work will have to be done in the update() function where obj
 
 # GAME PROBLEMS
 1. Game often crashes on object collision 
-possible cause: a problem with the code execution order or data passing
+- possible cause: a problem with the code execution order or data passing
 2. Game slows down considerably after shooting a lot of bullets and destroying  lot of asteroids
-possible cause: too many objects being rendered and updated
+- possible cause: too many objects being rendered and updated
