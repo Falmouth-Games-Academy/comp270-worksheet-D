@@ -49,12 +49,17 @@ void Asteroid::draw(SDL_Renderer * renderer) const
 		worldTransform.setTransform(m_position, m_rotation);
 
 		Point2D worldVerts[NumVerts];
-		for (unsigned i = 0; i < NumVerts; ++i)
-			worldVerts[i] = worldTransform * m_localVerts[i];
+			
+		// work out the first vert in world space, then we'll get the next required vert in the for loop
+		worldVerts[0] = worldTransform * m_localVerts[0];
 
 		// Draw the transformed points
 		for (unsigned i = 0; i < NumVerts - 1; ++i)
+		{
+			worldVerts[i+1] = worldTransform * m_localVerts[i+1];	// work out the next vert.
 			SDL_RenderDrawLineF(renderer, worldVerts[i].x, worldVerts[i].y, worldVerts[i + 1].x, worldVerts[i + 1].y);
+
+		}
 
 		SDL_RenderDrawLineF(renderer, worldVerts[NumVerts - 1].x, worldVerts[NumVerts - 1].y, worldVerts[0].x, worldVerts[0].y);
 	}
