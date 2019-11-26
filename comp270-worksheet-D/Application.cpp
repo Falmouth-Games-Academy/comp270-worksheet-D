@@ -174,6 +174,18 @@ void Application::update()
 			// Move the asteroid to its new position
 			asteroid.update();
 
+			// Benchmarking - random asteroid expansion
+			bool explode = rand() % 100 > 98;
+			if (explode)
+				explode = rand() % 100 > 60; //  again because the chance seemed too high
+			
+			if (explode)
+			{
+				expandAsteroid(asteroid);
+				asteroid.kill();
+				break;
+			}
+
 			// See if any of the (live) bullets are inside this asteroid
 			for (auto& bullet : m_bullets)
 			{
@@ -181,17 +193,18 @@ void Application::update()
 				{
 					// Shatter the asteroid by killing it and spawning some new ones
 					// roughly where it is
-					unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
-					for (unsigned i = 0; i < numFragments; ++i)
-					{
-						Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
-						vel.normalise();
-						vel *= (rand() % 5) / 8 + 0.2f;
+					//unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
+					//for (unsigned i = 0; i < numFragments; ++i)
+					//{
+					//	Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
+					//	vel.normalise();
+					//	vel *= (rand() % 5) / 8 + 0.2f;
 
-						Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid.getScale();
-						spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments-1));
-					}
+					//	Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid.getScale();
+					//	spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments-1));
+					//}
 
+					expandAsteroid(asteroid);
 					asteroid.kill();
 					bullet.kill();
 					break;
@@ -200,6 +213,24 @@ void Application::update()
 		}
 	}
 }
+
+// lil thing to make this benchmarking more tidy in the code base
+void Application::expandAsteroid(Asteroid ast)
+{
+	// Shatter the asteroid by killing it and spawning some new ones
+	// roughly where it is
+	unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
+	for (unsigned i = 0; i < numFragments; ++i)
+	{
+		Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
+		vel.normalise();
+		vel *= (rand() % 5) / 8 + 0.2f;
+
+		Point2D pos = ast.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * ast.getScale();
+		spawnAsteroid(pos, vel, ast.getScale() / float(numFragments - 1));
+	}
+}
+
 
 // Render the scene
 void Application::render()
