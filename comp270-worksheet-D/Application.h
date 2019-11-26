@@ -23,6 +23,8 @@ private:
 	void spawnAsteroid(Point2D pos, Vector2D vel, float maxScale);
 	bool isOffscreen(const Drifter* drifter) const;
 
+	void expandAsteroid(Asteroid ast);
+
 	const int c_windowWidth = 800;
 	const int c_windowHeight = 700;
 
