@@ -16,3 +16,12 @@ Base repository for COMP270 worksheet D
 -   Sometimes exception thrown at Drifter::Kill, dont know why
 
 ### C) done
+
+### D)
+-   30 second run tested, Application::run is said to take the most time,  most likely just because everything is called from it.
+-   Application::render is second most frequent, with 99.6% of its time taken up by Asteroid::draw. Not terribly suprising, as there quickly becomes many (>100) asteroids on the screen which all need to be re-rendered every frame.
+-   The next most used functions are just Matrix functions
+-   Everything else is near irrelevent (< 5% cpu)
+
+### E)
+-   For the first 5 seconds, no significant increase in memory usage. From 5 seconds onwards, a steady climb of 1 - 2 MB per second. With the rapidly and exponentially increasing number of asteroids to track, this is not all too surprising
