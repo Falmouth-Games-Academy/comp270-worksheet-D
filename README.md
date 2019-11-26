@@ -14,7 +14,7 @@
 > there are two calls to get the magnitude of a vector to check if its length is less than zero, which is not possible and getting the magnitude is a fairly slow operation. 
 
 - Render
-> - Both bullet and asteroid draws 
+> - Both bullet and asteroid draws  
 > Are called without checking if it is visible on the screen, if there are a lot of asteroids off screen it will case the game to slow down
 
 #### #1 (b)
