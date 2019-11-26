@@ -35,15 +35,43 @@ if you hold down the spacebar it continuely fires every frame. if you do this wh
 
 #### #1 (c)
 
+Spwaned 1000 anderiods on setup (normal spwaning remained the same)
+ship fires 150 bullets in burst while moving forwards and turning conter-clockwise (firers for 150 frames, pauses for 150 frames, also only moves while friering)
+No users input is required
+
+set 'Application::c_debuging' to true to run the test case.
+The amount of initial asteriods and bullets to firer are defined just below.
+
 #### #1 (d)
+Benchmark CPU
+![CPU-MinSize](/Screenshoots/CPU%20-%20[Bench].png]
+
 
 #### #1 (e)
+Benchmark Memory
+![CPU-MinSize](/Screenshoots/MEM%20-%20[Bench].png]
+
+
+#### #2 (a) (implermented last)
+> Affter implermenting the barycentric Convex collision method there is a sligt preformance incress. I choose this since convex collision is one of the faster methods but it is not most accurate, but accurate enought.
+
+![CPU-MinSize](/Screenshoots/CPU%20-%20[Convex].png]
+
+
+#### #2 (b) (implermented with angles test and affter the object recyleing/pooling was implermented)
+
+![CPU-MinSize](/Screenshoots/CPU%20-%20[ErlyExit].png]
+
 
 #### #3 (a)
 Pros:
-> "maximum" (within reason)
+> theres no "maximum" amount of objects that can be spwaned (within reason)
+>
 
 cons:
+> Memory gets realocated when objects are added to the list
+> objects are not re used
+> 
 
 #### #3 (b)
 > there are less objects active in the scene than in the vector. This is because objects are not recycled and used again nor removed from the vector/scene. This affects the preformance since it has to resize the vectors when elements are added and the memory will incress overtime as the objects are not removed.
@@ -51,7 +79,7 @@ cons:
 #### #3 (c)
 > 1. you could use a fixed array and fill the array with objects set to not alive. Then you would do a look up to find the fist object that is not active, move that obejct to the "spawn" location bring it back to life.  
 On the down side this would mean you would have a limited number of objects to spawn;
-Or you could do the same thing with a vector so you can add to it if you run out of objects, maybe it would be better to resize the vector larger than the amount of object that are going to be added so there are less reallocation (im going to benchmark it!)
+Or you could do the same thing with a vector so you can add to it if you run out of objects, maybe it would be better to resize the vector larger than the amount of object that are going to be added so there are less reallocation
 ...  
   
 2. I guess you could removed/delete the objects from the vector. :`(
@@ -74,15 +102,27 @@ But the bullet vector is still incressing even affter fire a larg amount of bull
 #### 4 (a)
 > asdroids have min size.
 > objects should be destroyed when off the screen
-> ...
+> In asteroid::draw we could work out the world verts in the same for loop as drawing and working out the first vert just befor the loop :)
 
 #### 4 (b)
-affter implermenting destroy when off screen, 
+affter implermenting destroy when off screen, we can see that we spend less time in the update function as a whole and that the memory allocation is not prity much stable
+![CPU-MinSize](/Screenshoots/CPU%20-%20[OffScreen].png]
 
+Affter working out the worldVerts of the astroid in the same loop as drawing we can see that we spend ~400units less time in the draw function. 
+![CPU-MinSize](/Screenshoots/CPU%20-%20[vertAndDraw].png]
 
 
 
 #####################
-All Test...
+
+All Test where performed using the "Angle Summation Test"
+Testing condisions:
+Spwaned 1000 anderiods on setup (normal spwaning remained the same)
+ship fires 150 bullets in burst while moving forwards and turning conter-clockwise (firers for 150 frames, pauses for 150 frames, also only moves while friering)
+No users input is required
+All test preformed where ~1min
+
+
+
 
 

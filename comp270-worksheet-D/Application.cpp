@@ -139,7 +139,7 @@ void Application::setupScene()
 		vel.normalise();
 		vel *= (rand() % 5) / 8 + 0.2f;
 
-		spawnAsteroid(pos, vel, c_asteroidMaxScale);
+		spawnAsteroid(pos, vel, c_asteroidMaxScale, false);
 	}
 }
 
@@ -263,7 +263,7 @@ void Application::shoot(float speed)
 	m_bullets.push_back(bullet);
 }
 
-void Application::spawnAsteroid(Point2D pos, Vector2D vel, float maxScale)
+void Application::spawnAsteroid(Point2D pos, Vector2D vel, float maxScale, bool usePool/* = true*/)
 {
 
 	// make sure we dont go below the min scale.
@@ -273,15 +273,16 @@ void Application::spawnAsteroid(Point2D pos, Vector2D vel, float maxScale)
 	float rotationSpeed = float(rand() % 10) * c_asteroidMaxRotationSpeed / 5.0f - c_asteroidMaxRotationSpeed;
 
 	// find a dead astroid and respawn.
-	for (int i = 0; i < m_asteroids.size(); i++)
-		if ( !m_asteroids[i].isAlive() )
-		{
-			m_asteroids[i].resetObject(pos, vel);
-			m_asteroids[i].setScale(scale);
-			m_asteroids[i].setRotationSpeed(rotationSpeed);
+	if (usePool)
+		for (int i = 0; i < m_asteroids.size(); i++)
+			if ( !m_asteroids[i].isAlive() )
+			{
+				m_asteroids[i].resetObject(pos, vel);
+				m_asteroids[i].setScale(scale);
+				m_asteroids[i].setRotationSpeed(rotationSpeed);
 
-			return;
-		}
+				return;
+			}
 
 	// add one if we have run out of astroids.
 	Asteroid asteroid(pos, vel, scale, rotationSpeed);

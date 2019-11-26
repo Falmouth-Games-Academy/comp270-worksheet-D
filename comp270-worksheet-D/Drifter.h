@@ -84,5 +84,5 @@ private:
 	float m_scale = 1.0f;			// Asteroid's size (scale applied to the vertices)
 
 	// Debuging
-	bool const c_debug_drawCollider = true;
+	bool const c_debug_drawCollider = false;
 };

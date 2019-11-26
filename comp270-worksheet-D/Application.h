@@ -20,7 +20,7 @@ private:
 	void render();
 
 	void shoot(float speed);
-	void spawnAsteroid(Point2D pos, Vector2D vel, float maxScale);
+	void spawnAsteroid(Point2D pos, Vector2D vel, float maxScale, bool usePool = true);
 	bool isOffscreen(const Drifter* drifter) const;
 
 	const int c_windowWidth = 800;
@@ -54,8 +54,8 @@ private:
 
 	const bool c_debuging = true;
 
-	const int c_debug_numInitialAsteriods = 10000;	// why not :)
-	const int c_debug_bulletsToFire = 500;
+	const int c_debug_numInitialAsteriods = 1000;	// why not :)
+	const int c_debug_bulletsToFire = 150;
 	const bool c_fireOneRound = false;
 
 	int m_debug_bulletsFired = 0;
