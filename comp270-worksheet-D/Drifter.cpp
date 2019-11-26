@@ -59,6 +59,14 @@ void Asteroid::draw(SDL_Renderer * renderer) const
 			worldVerts[i+1] = worldTransform * m_localVerts[i+1];	// work out the next vert.
 			SDL_RenderDrawLineF(renderer, worldVerts[i].x, worldVerts[i].y, worldVerts[i + 1].x, worldVerts[i + 1].y);
 
+			// Draw some collider debug lines.
+			if (c_debug_drawCollider && i > 1)
+			{
+				SDL_SetRenderDrawColor(renderer, 92, 0, 0, 128);
+				SDL_RenderDrawLineF(renderer, worldVerts[i].x, worldVerts[i].y, worldVerts[0].x, worldVerts[0].y);
+				SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+			}
+
 		}
 
 		SDL_RenderDrawLineF(renderer, worldVerts[NumVerts - 1].x, worldVerts[NumVerts - 1].y, worldVerts[0].x, worldVerts[0].y);

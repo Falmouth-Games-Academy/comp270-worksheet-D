@@ -78,4 +78,7 @@ private:
 	float m_rotation = 0.0f;		// Current rotation angle
 	float m_rotationSpeed = 0.001f;	// Amount by which to 
 	float m_scale = 1.0f;			// Asteroid's size (scale applied to the vertices)
+
+	// Debuging
+	bool const c_debug_drawCollider = true;
 };
