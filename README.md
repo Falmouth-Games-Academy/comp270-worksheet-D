@@ -19,3 +19,9 @@ Generating large numbers of asteroids (by shooting them) was fine.
 Asteroid spawn rate increased to 100 and pressing space spawns 3 bullets.
 
 ### Part D
+![alt text](https://i.imgur.com/JC5jmA1.png)
+![alt text](https://i.imgur.com/baM4Kna.png)
+
+### Part E
+![alt text](https://i.imgur.com/NyfDo46.png)
+![alt text](https://i.imgur.com/77C3jIp.png)

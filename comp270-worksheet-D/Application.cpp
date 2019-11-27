@@ -116,8 +116,8 @@ void Application::processEvent(const SDL_Event &ev)
 			// Trigger
 			if (ev.key.keysym.sym == SDLK_SPACE) {
 				shoot(0.5f);
-				shoot(1.0f);
-				shoot(1.5f);
+				//shoot(1.0f);
+				//shoot(1.5f);
 
 			}
 		}

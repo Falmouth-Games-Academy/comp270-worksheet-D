@@ -27,7 +27,7 @@ private:
 	const int c_windowHeight = 700;
 
 	// Asteroid generation settings
-	const int c_spawnRate = 100;				// Likelihood of a new asteroid being spawned each update
+	const int c_spawnRate = 1;				// Likelihood of a new asteroid being spawned each update
 	const int c_numInitialAsteriods = 10;	// Number of asteroids when the game starts
 	const float c_asteroidMaxScale = 20.0f;	// Size limit for each asteroid
 	const float c_asteroidMaxRotationSpeed = 0.01f;	// Angular speed limit
