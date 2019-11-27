@@ -39,3 +39,8 @@ After further examination of my benchmarks, I found that in the update() functio
 this could be improved by reducing the number of objects being compared for collision at any one time.
 Going more in depth into the pointIsInside() function itself, most time is taken by Vector2D operations such as normalise and magnitude.
 Next are Matrix2D operations, mainly the Matrix2D operator* types and the setTransform function. 
+
+## FURTHER ENHANCEMENTS
+To improve the game's performance even more, I could reduce the number of calls to the pointIsInside() function by either comparing the distance from each bullet to each asteroid,
+and only check for collision with the closest asteroid. Alternatively, I could split the game area into a grid, and compare the bullets only with the objects in the section the bullet is currently in.
+I could also create an object pool for the asteroids, and implement a limit on how many asteroids can be on the screen at any one time to free up some memory and processing power.
