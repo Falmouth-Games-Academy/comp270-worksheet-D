@@ -39,8 +39,14 @@ Next are Matrix2D operations, mainly the Matrix2D operator* types and the setTra
 
 ## OPTIMISATION RESULTS
 1. Disabling off screen objects:
-- After running a CPU diagnostics session I saw a significant decrease in the usage of the pointIsInside() function, resulting
-in a bigger gap between it and the update() function.
+- After running a CPU diagnostics session I saw a significant decrease in the usage of the pointIsInside() function, now using a total of 38.59% total CPU, resulting
+in a much bigger gap between it and the update() function, which in this session used 89.99% of total CPU.
+- After running a memory diagnostics session, I noticed that the spikes in used data became less uniform, with much bigger gaps between them. Overall less memory was being used, but the
+gradual drop in the size of the spikes became less pronounced.
+
+2. Limiting the number of asteroid splits based on size
+- After running the CPU diagnostics, the total CPU usage of update() became much smaller, now at 47.42%, bridging the gap between it and pointIsInside(), now at 44.57%.
+- After runnning the memory diagnostics session, I saw  massive drop in memory usage and the sizes of the spikes, which now sometimes are nonexistent or even negative.
 
 ## FURTHER ENHANCEMENTS
 To improve the game's performance even more, I could reduce the number of calls to the pointIsInside() function by either comparing the distance from each bullet to each asteroid,
