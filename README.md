@@ -19,9 +19,13 @@ Generating large numbers of asteroids (by shooting them) was fine.
 Asteroid spawn rate increased to 100 and pressing space spawns 3 bullets.
 
 ### Part D
+In the first test the pointIsInside function is run many times, which was what I was expecting as for every bullet that is shot, each asteroid checks its position.
 ![alt text](https://i.imgur.com/JC5jmA1.png)
+I then ran the profiler with the tests active and was surprised to see that the matrix multiplication function was running the most. Upon investigating this, it was because the test had the asteroid probability set to 100, and the matrix multiplication is called in the asteroids draw function. This is further cause for reducing the amount of asteroids there should be.
 ![alt text](https://i.imgur.com/baM4Kna.png)
 
 ### Part E
+For the memory test I expected the memory to spike whenever a bullet collided with an asteroid as it would then generate a new asteroid. I also noticed that when shooting the memory usage increased slightly. This becomes an issue, you can see in snapshot 4, when you hold down the shoot button.
 ![alt text](https://i.imgur.com/NyfDo46.png)
+Similarly, I ran the test case with the asteroid spawn rate at 100, and it was entirely what I expected. The memory allocation increased exponentially as more asteroids were spawned.
 ![alt text](https://i.imgur.com/77C3jIp.png)
