@@ -1,13 +1,10 @@
 # TASK 1
 
 ## OBVIOUS INEFFICIENCIES
-1. Using division where it can be substituted with multiplication - uses more processing power
-2. Creating unnecessary reference variables - wastes memory
-3. Constantly applying a matrix transformation to render the player, even if no change occured - wastes processing power
-4. Updating objects even if they are off screen - big waste of processing power
-5. Constantly spawning new objects and not properly destroying them - clogs up memory, very wasteful
-6. Checking every bullet for collision against every asteroid every frame - very big waste of processing power
-7. The asteroids seem to have no limit on how many times they can split - can clog up memory
+1. Updating objects even if they are off screen - big waste of processing power
+2. Constantly spawning new objects and not properly destroying them - clogs up memory, very wasteful
+3. Checking every bullet for collision against every asteroid every frame - very big waste of processing power
+4. The asteroids seem to have no limit on how many times they can split - can clog up memory
 
 I think most of the work will have to be done in the update() function where objects are managed.
 
@@ -39,6 +36,9 @@ After further examination of my benchmarks, I found that in the update() functio
 this could be improved by reducing the number of objects being compared for collision at any one time.
 Going more in depth into the pointIsInside() function itself, most time is taken by Vector2D operations such as normalise and magnitude.
 Next are Matrix2D operations, mainly the Matrix2D operator* types and the setTransform function. 
+
+## OPTIMISATION RESULTS
+
 
 ## FURTHER ENHANCEMENTS
 To improve the game's performance even more, I could reduce the number of calls to the pointIsInside() function by either comparing the distance from each bullet to each asteroid,
