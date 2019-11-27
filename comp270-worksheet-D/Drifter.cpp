@@ -9,7 +9,7 @@ void Drifter::update()
 	{
 		// Update the position, and anything the derived class wants to
 		m_position = m_position + m_velocity;
-		updateExtra();
+		// updateExtra();
 	}
 }
 
