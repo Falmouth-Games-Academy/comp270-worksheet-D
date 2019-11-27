@@ -33,6 +33,7 @@ bool Application::run()
 			processEvent(ev);
 		}
 
+		// Test the game
 		runTestCase(timer, 250, 0.05f, 1.0f);
 
 		// Render current state
@@ -93,35 +94,26 @@ void Application::shutdownSDL()
 
 void Application::runTestCase(int* timer, float interval, float rotationSpeed, float shotpeed)
 {
+	// rotate the player
 	m_player.rotate(rotationSpeed);
 
+	// if the elapsed time reached the wanted interval
 	while (clock() - *timer >= interval)
 	{
-		// Update asteroids and check for collisions with bullets
+		// Destroy one alive asteroid
 		for (auto& asteroid : m_asteroids)
-		{
+		{			
 			if (asteroid.isAlive())
 			{
-				// Shatter the asteroid by killing it and spawning some new ones
-				// roughly where it is
-				unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
-				for (unsigned i = 0; i < numFragments; ++i)
-				{
-					Vector2D vel(float(rand() % 100) * 0.02f - 1.0f, float(rand() % 100) * 0.02f - 1.0f);
-					vel.normalise();
-					vel *= (rand() % 5) * 0.125 + 0.2f;
-
-					Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) * 0.2f - 1.0f, float(rand() % 10) * 0.2f - 1.0f) * asteroid.getScale();
-					spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments - 1));
-				}
-
-				asteroid.kill();
+				splitAsteroid(&asteroid);
 				break;
 			}
 		}
 
+		// fire a shot
 		shoot(shotpeed);
 
+		// reset the timer
 		*timer = clock();
 	}
 }
@@ -231,34 +223,39 @@ void Application::update()
 			// See if any of the (live) bullets are inside this asteroid
 			for (auto& bullet : m_bullets)
 			{
-				if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
+				if (asteroid.getScale() > c_asteroidMaxScale * 0.125f)
 				{
-					// Shatter the asteroid by killing it and spawning some new ones
-					// roughly where it is
-					unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
-					for (unsigned i = 0; i < numFragments; ++i)
+					if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
 					{
-						Vector2D vel(float(rand() % 100) * 0.02f - 1.0f, float(rand() % 100) * 0.02f - 1.0f);
-						vel.normalise();
-						vel *= (rand() % 5) * 0.125f + 0.2f;
-
-						Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) * 0.2f - 1.0f, float(rand() % 10) * 0.2f - 1.0f) * asteroid.getScale();
-						spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments-1));
+						splitAsteroid(&asteroid);
+						bullet.kill();
+						break;
 					}
-
-					asteroid.kill();
-					bullet.kill();
-					break;
 				}
-			}
-
-			if (m_asteroids.size() > 1)
-			{
-				std::cout << m_asteroids[1].getPosition().x << std::endl;
-				std::cout << m_asteroids[1].getPosition().y << std::endl;
 			}
 		}
 	}
+}
+
+void Application::splitAsteroid(Asteroid* asteroid)
+{
+	// check if the asteroid is big enough to split
+	if (asteroid->getScale() > c_splittableMinScale)
+	{
+		// Shatter the asteroid by killing it and spawning some new ones
+		// roughly where it is
+		unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
+		for (unsigned i = 0; i < numFragments; ++i)
+		{
+			Vector2D vel(float(rand() % 100) * 0.02f - 1.0f, float(rand() % 100) * 0.02f - 1.0f);
+			vel.normalise();
+			vel *= (rand() % 5) * 0.125f + 0.2f;
+
+			Point2D pos = asteroid->getPosition() + Vector2D(float(rand() % 10) * 0.2f - 1.0f, float(rand() % 10) * 0.2f - 1.0f) * asteroid->getScale();
+			spawnAsteroid(pos, vel, asteroid->getScale() / float(numFragments - 1));
+		}
+	}
+	asteroid->kill();
 }
 
 // Render the scene
