@@ -38,7 +38,9 @@ Going more in depth into the pointIsInside() function itself, most time is taken
 Next are Matrix2D operations, mainly the Matrix2D operator* types and the setTransform function. 
 
 ## OPTIMISATION RESULTS
-
+1. Disabling off screen objects:
+- After running a CPU diagnostics session I saw a significant decrease in the usage of the pointIsInside() function, resulting
+in a bigger gap between it and the update() function.
 
 ## FURTHER ENHANCEMENTS
 To improve the game's performance even more, I could reduce the number of calls to the pointIsInside() function by either comparing the distance from each bullet to each asteroid,
