@@ -114,8 +114,12 @@ void Application::processEvent(const SDL_Event &ev)
 				m_player.applyThrust(0.5f);
 
 			// Trigger
-			if (ev.key.keysym.sym == SDLK_SPACE)
+			if (ev.key.keysym.sym == SDLK_SPACE) {
 				shoot(0.5f);
+				shoot(1.0f);
+				shoot(1.5f);
+
+			}
 		}
 		break;
 	}
@@ -155,7 +159,7 @@ void Application::update()
 	if (rand() % 100 < c_spawnRate)
 	{
 		bool left = rand() % 100 > 50;
-		bool top = rand() % 100 > 50;
+		bool top = rand() % 100 > 75;
 		
 		Point2D pos(left ? 0 : c_windowWidth, top ? 0 : c_windowHeight);
 		Vector2D vel((rand() % 100) * c_windowWidth / 100 - pos.x,
