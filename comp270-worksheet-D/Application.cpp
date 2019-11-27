@@ -189,6 +189,12 @@ void Application::update()
 	for (auto& bullet : m_bullets)
 	{
 		bullet.update();
+
+		// Disable the bullet if outside the screen
+		Point2D bulletPos = bullet.getPosition();
+		if (bulletPos.x > c_windowWidth || bulletPos.x < 0 
+			|| bulletPos.y > c_windowHeight || bulletPos.y < 0)
+			bullet.kill();
 	}
 
 	// Spawn asteroids from the corners, heading inwards
@@ -214,6 +220,14 @@ void Application::update()
 			// Move the asteroid to its new position
 			asteroid.update();
 
+			// Disable the asteroid if outside the screen
+			Point2D asteroidPos = asteroid.getPosition();
+			float asteroidScale = asteroid.getScale();
+			if (asteroidPos.x > c_windowWidth + asteroidScale || asteroidPos.x < 0 - asteroidScale
+				|| asteroidPos.y > c_windowHeight + asteroidScale || asteroidPos.y < 0 - asteroidScale)
+				asteroid.kill();
+
+
 			// See if any of the (live) bullets are inside this asteroid
 			for (auto& bullet : m_bullets)
 			{
@@ -236,6 +250,12 @@ void Application::update()
 					bullet.kill();
 					break;
 				}
+			}
+
+			if (m_asteroids.size() > 1)
+			{
+				std::cout << m_asteroids[1].getPosition().x << std::endl;
+				std::cout << m_asteroids[1].getPosition().y << std::endl;
 			}
 		}
 	}

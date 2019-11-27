@@ -4,8 +4,9 @@
 1. Using division where it can be substituted with multiplication - uses more processing power
 2. Creating unnecessary reference variables - wastes memory
 3. Constantly applying a matrix transformation to render the player, even if no change occured - wastes processing power
-4. Constantly spawning new objects and not properly destroying them - clogs up memory, very wasteful
-5. Checking every bullet for collision against every asteroid every frame - very big waste of processing power
+4. Updating objects even if they are off screen - big waste of processing power
+5. Constantly spawning new objects and not properly destroying them - clogs up memory, very wasteful
+6. Checking every bullet for collision against every asteroid every frame - very big waste of processing power
 
 I think most of the work will have to be done in the update() function where objects are managed.
 
