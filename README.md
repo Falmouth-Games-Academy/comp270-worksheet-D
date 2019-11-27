@@ -19,12 +19,16 @@ As I predicted, the function that utilizes the most processing power is the upda
 I ran a 26.035second long diagnostics session and it showed that it took up as much as 88.98% of total CPU usage.
 Next up was the pointIsInside() function with 87.40%.
 
+![](https://github.com/JoachimRayski/comp270-worksheet-D/blob/master/CPUdiagsesh.jpg)
+
 ## MEMORY PROFILER RESULTS
 I ran a 2.33 minute memory diagnostics session and took snapshots at 10second intervals.
 This is what I observed:
 - In the first 5 snapshots there were  regular spikes in used data ranging from as low a 64.4kb to as high as 101.7kb, with an average of 79.195kb
 - In the next 5 the spikes started slightly decreasing in size, now ranging from as low as 37.38kb to as high as 97.76, with an average of 59.784kb
 - In the last 5 snapshots, there was a considerable drop in the size of the spikes, now ranging from as low as 2.26 to as high as 41.08, with an average of 12.974kb
+
+![](https://github.com/JoachimRayski/comp270-worksheet-D/blob/master/MEMdiagsesh.jpg)
 
 The results matched my expectations, because when there is no limit on how many objects can be in the game at one time, as you keep spawning them, the performance is gradually going to drop.
 Then as the performance drops, less instructions are executed in the same amount of time, therefore resulting in smaller and more irregular spikes in data usage.
@@ -41,12 +45,22 @@ Next are Matrix2D operations, mainly the Matrix2D operator* types and the setTra
 1. Disabling off screen objects:
 - After running a CPU diagnostics session I saw a significant decrease in the usage of the pointIsInside() function, now using a total of 38.59% total CPU, resulting
 in a much bigger gap between it and the update() function, which in this session used 89.99% of total CPU.
+
+![](https://github.com/JoachimRayski/comp270-worksheet-D/blob/master/CPUdiagsesh2.jpg)
+
 - After running a memory diagnostics session, I noticed that the spikes in used data became less uniform, with much bigger gaps between them. Overall less memory was being used, but the
 gradual drop in the size of the spikes became less pronounced.
 
+![](https://github.com/JoachimRayski/comp270-worksheet-D/blob/master/MEMdiagsesh2.jpg)
+
 2. Limiting the number of asteroid splits based on size
 - After running the CPU diagnostics, the total CPU usage of update() became much smaller, now at 47.42%, bridging the gap between it and pointIsInside(), now at 44.57%.
+
+![](https://github.com/JoachimRayski/comp270-worksheet-D/blob/master/CPUdiagsesh3.jpg)
+
 - After runnning the memory diagnostics session, I saw  massive drop in memory usage and the sizes of the spikes, which now sometimes are nonexistent or even negative.
+
+![](https://github.com/JoachimRayski/comp270-worksheet-D/blob/master/MEMdiagsesh3.jpg)
 
 ## FURTHER ENHANCEMENTS
 To improve the game's performance even more, I could reduce the number of calls to the pointIsInside() function by either comparing the distance from each bullet to each asteroid,
