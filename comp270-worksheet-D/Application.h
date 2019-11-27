@@ -15,6 +15,7 @@ private:
 	void shutdownSDL();
 
 	void processEvent(const SDL_Event &e);
+	void processBenchmark();
 	void setupScene();
 	void update();
 	void render();
@@ -25,6 +26,10 @@ private:
 
 	const int c_windowWidth = 800;
 	const int c_windowHeight = 700;
+	
+	// Benchmark settings
+	bool benchmark = true;
+	const int b_spawnRate = 100;
 
 	// Asteroid generation settings
 	const int c_spawnRate = 1;				// Likelihood of a new asteroid being spawned each update

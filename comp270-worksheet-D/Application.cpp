@@ -30,6 +30,10 @@ bool Application::run()
 			processEvent(ev);
 		}
 
+		// Process benchmark
+		if (benchmark)
+			processBenchmark();
+
 		// Render current state
 		update();
 		render();
@@ -84,6 +88,14 @@ void Application::shutdownSDL()
 	}
 
 	SDL_Quit();
+}
+
+// Induce custom benchmarking events
+void Application::processBenchmark()
+{
+	m_player.rotate(-0.1f);
+	m_player.applyThrust(0.1f);
+	shoot(0.5f);
 }
 
 // Process a single event
@@ -152,7 +164,7 @@ void Application::update()
 	}
 
 	// Spawn asteroids from the corners, heading inwards
-	if (rand() % 100 < c_spawnRate)
+	if (rand() % 100 < c_spawnRate || (benchmark && rand() % 100 < b_spawnRate))
 	{
 		bool left = rand() % 100 > 50;
 		bool top = rand() % 100 > 50;
