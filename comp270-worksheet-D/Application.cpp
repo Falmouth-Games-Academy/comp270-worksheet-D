@@ -189,24 +189,28 @@ void Application::update()
 			// See if any of the (live) bullets are inside this asteroid
 			for (auto& bullet : m_bullets)
 			{
-				if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
+				if ((bullet.getPosition() - asteroid.getPosition()).magnitude() < COLLISIONRANGE)
 				{
-					// Shatter the asteroid by killing it and spawning some new ones
-					// roughly where it is
-					unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
-					for (unsigned i = 0; i < numFragments; ++i)
+					if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
 					{
-						Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
-						vel.normalise();
-						vel *= (rand() % 5) / 8 + 0.2f;
+						// Shatter the asteroid by killing it and spawning some new ones
+						// roughly where it is
+						unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
+						for (unsigned i = 0; i < numFragments; ++i)
+						{
+							Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
+							vel.normalise();
+							vel *= (rand() % 5) / 8 + 0.2f;
 
-						Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid.getScale();
-						spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments-1));
+							Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid.getScale();
+							spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments-1));
+						}
+
+						asteroid.kill();
+						bullet.kill();
+						
+						break;
 					}
-
-					asteroid.kill();
-					bullet.kill();
-					break;
 				}
 			}
 		}

@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "Drifter.h"
 
+#define COLLISIONRANGE 50.0
+
 class Application
 {
 public:

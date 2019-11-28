@@ -9,7 +9,7 @@ void Drifter::update()
 	{
 		// Update the position, and anything the derived class wants to
 		m_position = m_position + m_velocity;
-		updateExtra();
+		//updateExtra();
 	}
 }
 
@@ -26,6 +26,19 @@ Asteroid::Asteroid(Point2D position, Vector2D velocity, float scale, float rotat
 {
 	for (unsigned i = 0; i < NumVerts; ++i)
 		m_localVerts[i] = m_localVerts[i].asVector() * m_scale;
+
+	// Find the local points in world space by applying a matrix transformation
+	Matrix2D worldTransform;
+	worldTransform.setTransform(m_position, m_rotation);
+	Point2D worldVerts[NumVerts];
+	for (unsigned i = 0; i < NumVerts; ++i)
+		worldVerts[i] = worldTransform * m_localVerts[i];
+	
+	// Compute the triangle areas to reduce computation time on collision detection
+	for (unsigned i = 1; i < NumVerts - 2; i++)
+	{
+		triangleAreas[i] = Point2D::getTriangleArea2(worldVerts[i], worldVerts[i + 1], worldVerts[i + 2]);
+	}
 }
 
 // Draws the asteroid on the screen
@@ -47,9 +60,19 @@ void Asteroid::draw(SDL_Renderer * renderer) const
 	}
 }
 
+bool Asteroid::pointIsInsideTriangle(const Point2D &p, const Point2D &a, const Point2D &b, const Point2D &c, int triangleIndex, int decimalErrorMargin) const
+{
+	float area = triangleAreas[triangleIndex];
+	float pArea = Point2D::getTriangleArea2(p, a, b) + Point2D::getTriangleArea2(p, a, c) + Point2D::getTriangleArea2(p, b, c);
+
+	int iArea = (int)(area * pow(10, decimalErrorMargin));
+	int iPArea = (int)(pArea * pow(10, decimalErrorMargin));
+	return iArea == iPArea;
+}
+
 // Returns true if the given point is currently inside the Asteroid, false if not.
 bool Asteroid::pointIsInside(Point2D point) const
-{
+ {
 	// Find the local points in world space by applying a matrix transformation
 	Matrix2D worldTransform;
 	worldTransform.setTransform(m_position, m_rotation);
@@ -57,38 +80,13 @@ bool Asteroid::pointIsInside(Point2D point) const
 	for (unsigned i = 0; i < NumVerts; ++i)
 		worldVerts[i] = worldTransform * m_localVerts[i];
 
-	// Sum the signed angles between all pairs of vertices and the test point;
-	// if the sum is near zero, the point is inside, otherwise it's outside.
-	Vector2D v0 = worldVerts[NumVerts-1] - point, v1;
-	float len = v0.magnitude();
-	if (len < 0.0f)
-		return true;	// point and vertex coincide
-	v0.normalise();
+	int collidingTriangles = 0;
 
-	float angle = 0.0f, dot;
-	for (unsigned i = 0; i < NumVerts; ++i)
+	// Check for collisions with all possible triangles
+	for (unsigned i = 1; i < NumVerts - 1; i++)
 	{
-		v1 = worldVerts[i] - point;
-		len = v1.magnitude();
-		if (len < 0.0f)
-			return true;	// point and vertex coincide
-		v1.normalise();
-
-		// Check if v1 is to the 'left' or 'right' of v0
-		dot = v0.dot(v1);
-		if (dot < -1.0f)
-			angle += M_PI;	// Point lies on the edge, so add 180 degrees
-		else if (dot < 1.0f)
-		{
-			if (v0.x * v1.y - v1.x * v0.y >= 0.0f)
-				angle += acosf(dot);
-			else
-				angle -= acosf(dot);
-		}
-
-		// Move to next point
-		v0 = v1;
+		collidingTriangles += pointIsInsideTriangle(point, worldVerts[0], worldVerts[i], worldVerts[i + 1], i - 1);
 	}
 
-	return fmod( fabs(angle) + M_PI, 4.0f * M_PI ) > 2.0f * M_PI;
+	return collidingTriangles % 2;
 }

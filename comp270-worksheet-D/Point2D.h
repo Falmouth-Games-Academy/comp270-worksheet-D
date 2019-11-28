@@ -29,4 +29,11 @@ public:
 	{
 		return Vector2D(x - other.x, y - other.y);
 	}
+
+	// Returns TWICE the area of a triangle (removes need for an additional division by doing so)
+	// Computation efficiency wise, it uses just 2 multiplications and 5 additions
+	static float getTriangleArea2(const Point2D &a, const Point2D &b, const Point2D &c)
+	{
+		return abs((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
+	}
 };
