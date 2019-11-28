@@ -56,3 +56,55 @@ The new benchmark results are:
 (Figure 3)
 
 As it can be deduced from these numbers, the bulk of calculations are now performed for the early exit and, unsurprisingly, this has tremendously increased overall performance.
+
+# Task 3
+
+## Notes on using std::vector
+
+Vectors are dynamic in size, therefore will automatically update themselves to accommodate new variables. In the case of the benchmark, the number of asteroids increases dramatically and this requires large amounts of vector resizes (aka copy the contents of the old vector into a new, larger one)
+
+Pros:
+* Requires little maintenance;
+* Doesn't require you to keep track of where items have been placed;
+* Doesn't require manual resizing
+
+Cons:
+* Can easily become more expensive than arrays through constant resizing
+* Read operations are slower than array reads (linear vs. constant complexity)
+* Lack of control over number of elements
+
+## Notes on number of asteroids
+
+Upon further inspection of the code, only the asteroids that are 'alive' are drawn and updated, but they are still located in the asteroids vector.
+
+In order to amend this situation, I propose the following solutions:
+
+* Use of a fixed size array with a length predetermined as a macro. New asteroids are only created IF the array has empty slots;
+* Removal of 'dead' OR 'out of map' asteroids from the vector/array - this approach will reasonably limit the memory usage while not having too much of an impact on performance;
+* Usage of a single Drifter vector/fixed size array for both asteroids and bullets, with garbage collection and a limited allowance of asteroids;
+
+## Notes upon asteroid system improvements
+
+Upon running the benchmark again, the amount of used memory remained at a consistent level of 23mB, allowing me to run it for over a minute (Figure 4)
+
+The implementation I chose was to create a fixed size pointer array to maximize efficiency, and I believe it paid off in the end as the game was actually able to run for over a minute with a maximum of 200 asteroids on screen while benchmarking. The cap can be easily adjusted from Application.h
+
+# Task 4
+
+## Notes on potential improvements
+
+As seen in: (Figure 5)
+* I believe that the game can be further improved by applying the same treatment I previously applied to the asteroids to bullets as well: this will increase render speed and memory allocation efficiency.
+* Additionally, I believe I can further improve CPU efficiency by adding a magnitudeSquared emthod that does NOT perform the square root to get the magnitude, as the sqrt() method was seemingly the cause of much inefficiency.
+
+## Switching to use of fixed size array for bullets
+
+The effect (Figure 6) was similar in nature to what was noticed in the previous benchmark - the amount of updates performed dropped quite significantly, as well as the render calls.
+
+## Swithing to the use of squared magnitudes
+
+As seen in Figure 7, we have effectively removed the use of squared roots altogether by instead doing our early exit checks with a squared range and a squared magnitude instead.
+
+## Further improvements
+
+* I personally decided against bounding boxes because I believe that for such irregular and possibly random shapes such as asteroids a polygon collider would be more suitable.

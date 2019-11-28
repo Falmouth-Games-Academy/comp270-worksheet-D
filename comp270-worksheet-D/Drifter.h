@@ -16,7 +16,7 @@ public:
 
 	// Returns true if the projectile is still active
 	// (has not been killed)
-	bool		isAlive() const { return m_alive; }
+	bool		isAlive() const { return this != nullptr ? m_alive : false; }
 
 	void update();
 	void kill() { m_alive = false; }

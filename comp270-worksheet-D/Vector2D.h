@@ -15,6 +15,12 @@ public:
 		return sqrt(x * x + y * y);
 	}
 
+	// Get the length of the vector squared 
+	float magnitudeSquared() const
+	{
+		return x * x + y * y;
+	}
+
 	// Make the vector unit length
 	void normalise()
 	{

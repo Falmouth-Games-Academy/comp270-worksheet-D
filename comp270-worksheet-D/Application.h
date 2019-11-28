@@ -3,6 +3,8 @@
 #include "Drifter.h"
 
 #define COLLISIONRANGE 50.0
+#define MAXASTEROIDS 200
+#define MAXBULLETS 200
 
 class Application
 {
@@ -24,6 +26,7 @@ private:
 
 	void shoot(float speed);
 	void spawnAsteroid(Point2D pos, Vector2D vel, float maxScale);
+	void cleaup();
 	bool isOffscreen(const Drifter* drifter) const;
 
 	const int c_windowWidth = 800;
@@ -45,8 +48,10 @@ private:
 
 	// Game objects
 	Player m_player;
-	std::vector<Bullet> m_bullets;
-	std::vector<Asteroid> m_asteroids;
+	Asteroid * arr_asteroids[MAXASTEROIDS];
+	Bullet * arr_bullets[MAXBULLETS];
+	int asteroidCount = 0;
+	int bulletCount = 0;
 
 	bool m_quit = false;
 };

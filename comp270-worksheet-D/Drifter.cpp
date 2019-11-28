@@ -5,7 +5,7 @@
 // Update's the Drifter's position, if it is still alive
 void Drifter::update()
 {
-	if (m_alive)
+	if (this != nullptr && m_alive)
 	{
 		// Update the position, and anything the derived class wants to
 		m_position = m_position + m_velocity;
