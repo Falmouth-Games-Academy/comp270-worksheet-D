@@ -105,10 +105,10 @@ void Application::processEvent(const SDL_Event &ev)
 			
 			// Player movement
 			if (state[SDL_SCANCODE_LEFT])
-				m_player.rotate(-0.1f);
+				m_player.rotate(-0.5f);
 
 			if (state[SDL_SCANCODE_RIGHT])
-				m_player.rotate(0.1f);
+				m_player.rotate(0.5f);
 
 			if (state[SDL_SCANCODE_UP])
 				m_player.applyThrust(0.5f);
@@ -152,7 +152,7 @@ void Application::update()
 	}
 
 	// Spawn asteroids from the corners, heading inwards
-	if (rand() % 100 < c_spawnRate)
+	if (rand() % 100 < 20)
 	{
 		bool left = rand() % 100 > 50;
 		bool top = rand() % 100 > 50;
@@ -223,7 +223,15 @@ void Application::render()
 void Application::shoot(float speed)
 {
 	Bullet bullet(m_player.getGunPosition(), m_player.getDirection() * (m_player.getSpeed() + speed));
+	Bullet bulletTwo(m_player.getGunPosition() + 5, m_player.getDirection() * (m_player.getSpeed() + speed));
+	Bullet bulletThree(m_player.getGunPosition() - 5, m_player.getDirection() * (m_player.getSpeed() + speed));
+	Bullet bulletFour(m_player.getGunPosition() + 10, m_player.getDirection() * (m_player.getSpeed() + speed));
+	Bullet bulletFive(m_player.getGunPosition() - 10, m_player.getDirection() * (m_player.getSpeed() + speed));
 	m_bullets.push_back(bullet);
+	m_bullets.push_back(bulletThree);
+	m_bullets.push_back(bulletTwo);
+	m_bullets.push_back(bulletFour);
+	m_bullets.push_back(bulletFive);
 }
 
 void Application::spawnAsteroid(Point2D pos, Vector2D vel, float maxScale)
