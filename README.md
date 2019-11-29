@@ -3,6 +3,8 @@ Base repository for COMP270 worksheet D
 
 ### NOTE: Drifter::updateExtra() has been causing crashes throughout the game and was therefore commented out due to being unable to pinpoint the exact issue - my guess is a derived class pointer is invalid.
 
+### NOTE 2: Press 'b' to toggle benchmark mode on/off
+
 # Task 1
 
 * Application.Update() - performs collision detection between every asteroid and every bullet which exponentially slows down the game at runtime, as more bullets and asteroids are created. Additionally, when objects are 'killed' they are only marked as to not render on screen. However, they are never actually removed or repurposed. Both of these issues will cause large memory usage over time at runtime;
