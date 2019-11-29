@@ -32,8 +32,9 @@ private:
 	const int c_windowWidth = 800;
 	const int c_windowHeight = 700;
 	
-	// Benchmark settings
-	bool benchmark = true;
+	// Benchmark settings - set bool to true for benchmark to begin
+	bool benchmark = false;
+	// asteroid spawn rate used for benchmark
 	const int b_spawnRate = 100;
 
 	// Asteroid generation settings

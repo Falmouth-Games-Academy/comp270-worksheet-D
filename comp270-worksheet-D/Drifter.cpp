@@ -34,7 +34,7 @@ Asteroid::Asteroid(Point2D position, Vector2D velocity, float scale, float rotat
 	for (unsigned i = 0; i < NumVerts; ++i)
 		worldVerts[i] = worldTransform * m_localVerts[i];
 	
-	// Compute the triangle areas to reduce computation time on collision detection
+	// Compute the triangle areas to reduce computation time on collision detection and cache it in an array
 	for (unsigned i = 1; i < NumVerts - 2; i++)
 	{
 		triangleAreas[i] = Point2D::getTriangleArea2(worldVerts[i], worldVerts[i + 1], worldVerts[i + 2]);
@@ -60,6 +60,7 @@ void Asteroid::draw(SDL_Renderer * renderer) const
 	}
 }
 
+// Returns true if a point is inside a triangle defined by 3 points. Uses a triangle index to check what cached area value to use.
 bool Asteroid::pointIsInsideTriangle(const Point2D &p, const Point2D &a, const Point2D &b, const Point2D &c, int triangleIndex, int decimalErrorMargin) const
 {
 	float area = triangleAreas[triangleIndex];

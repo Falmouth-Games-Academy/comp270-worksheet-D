@@ -71,7 +71,7 @@ private:
 									Point2D(0.9f, -0.6f), Point2D(0.3f, -0.6f),
 									Point2D(0.0f, -0.9f), Point2D(-0.6f, -0.6f),
 									Point2D(-1.2f, 0.0f), Point2D(-0.9f, 0.9f) };
-	// Sum of all triangle areas
+	// Sum of all triangle areas - cached upon object creation
 	float triangleAreas[NumVerts - 2];
 	float m_rotation = 0.0f;		// Current rotation angle
 	float m_rotationSpeed = 0.001f;	// Amount by which to 

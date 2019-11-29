@@ -128,6 +128,9 @@ void Application::processEvent(const SDL_Event &ev)
 			// Trigger
 			if (ev.key.keysym.sym == SDLK_SPACE)
 				shoot(0.5f);
+
+			if (ev.key.keysym.sym == SDLK_b)
+				benchmark = !benchmark;
 		}
 		break;
 	}
