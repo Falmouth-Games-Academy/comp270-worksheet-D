@@ -2,6 +2,10 @@
 #include "Player.h"
 #include "Drifter.h"
 
+#define COLLISIONRANGE 50.0
+#define MAXASTEROIDS 200
+#define MAXBULLETS 200
+
 class Application
 {
 public:
@@ -15,16 +19,23 @@ private:
 	void shutdownSDL();
 
 	void processEvent(const SDL_Event &e);
+	void processBenchmark();
 	void setupScene();
 	void update();
 	void render();
 
 	void shoot(float speed);
 	void spawnAsteroid(Point2D pos, Vector2D vel, float maxScale);
+	void cleaup();
 	bool isOffscreen(const Drifter* drifter) const;
 
 	const int c_windowWidth = 800;
 	const int c_windowHeight = 700;
+	
+	// Benchmark settings - set bool to true for benchmark to begin
+	bool benchmark = false;
+	// asteroid spawn rate used for benchmark
+	const int b_spawnRate = 100;
 
 	// Asteroid generation settings
 	const int c_spawnRate = 1;				// Likelihood of a new asteroid being spawned each update
@@ -38,8 +49,10 @@ private:
 
 	// Game objects
 	Player m_player;
-	std::vector<Bullet> m_bullets;
-	std::vector<Asteroid> m_asteroids;
+	Asteroid * arr_asteroids[MAXASTEROIDS];
+	Bullet * arr_bullets[MAXBULLETS];
+	int asteroidCount = 0;
+	int bulletCount = 0;
 
 	bool m_quit = false;
 };

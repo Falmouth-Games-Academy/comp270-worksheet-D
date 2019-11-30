@@ -16,7 +16,7 @@ public:
 
 	// Returns true if the projectile is still active
 	// (has not been killed)
-	bool		isAlive() const { return m_alive; }
+	bool		isAlive() const { return this != nullptr ? m_alive : false; }
 
 	void update();
 	void kill() { m_alive = false; }
@@ -57,6 +57,7 @@ public:
 
 	float	getScale() const { return m_scale; }
 	bool	pointIsInside(Point2D point) const;
+	bool	pointIsInsideTriangle(const Point2D &p, const Point2D &a, const Point2D &b, const Point2D &c, int triangleIndex, int decimalErrorMargin = 1) const;
 
 protected:
 	// Increase the rotation by a fixed amount each time update() is called.
@@ -70,7 +71,8 @@ private:
 									Point2D(0.9f, -0.6f), Point2D(0.3f, -0.6f),
 									Point2D(0.0f, -0.9f), Point2D(-0.6f, -0.6f),
 									Point2D(-1.2f, 0.0f), Point2D(-0.9f, 0.9f) };
-
+	// Sum of all triangle areas - cached upon object creation
+	float triangleAreas[NumVerts - 2];
 	float m_rotation = 0.0f;		// Current rotation angle
 	float m_rotationSpeed = 0.001f;	// Amount by which to 
 	float m_scale = 1.0f;			// Asteroid's size (scale applied to the vertices)

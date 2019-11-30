@@ -30,6 +30,10 @@ bool Application::run()
 			processEvent(ev);
 		}
 
+		// Process benchmark
+		if (benchmark)
+			processBenchmark();
+
 		// Render current state
 		update();
 		render();
@@ -86,6 +90,14 @@ void Application::shutdownSDL()
 	SDL_Quit();
 }
 
+// Induce custom benchmarking events
+void Application::processBenchmark()
+{
+	m_player.rotate(-0.1f);
+	m_player.applyThrust(0.1f);
+	shoot(0.5f);
+}
+
 // Process a single event
 void Application::processEvent(const SDL_Event &ev)
 {
@@ -116,6 +128,9 @@ void Application::processEvent(const SDL_Event &ev)
 			// Trigger
 			if (ev.key.keysym.sym == SDLK_SPACE)
 				shoot(0.5f);
+
+			if (ev.key.keysym.sym == SDLK_b)
+				benchmark = !benchmark;
 		}
 		break;
 	}
@@ -146,13 +161,13 @@ void Application::update()
 	m_player.update();
 
 	// Move the bullets to their new positions
-	for (auto& bullet : m_bullets)
+	for (auto& bullet : arr_bullets)
 	{
-		bullet.update();
+		bullet->update();
 	}
 
 	// Spawn asteroids from the corners, heading inwards
-	if (rand() % 100 < c_spawnRate)
+	if ((rand() % 100 < c_spawnRate || (benchmark && rand() % 100 < b_spawnRate)) && asteroidCount < MAXASTEROIDS)
 	{
 		bool left = rand() % 100 > 50;
 		bool top = rand() % 100 > 50;
@@ -167,38 +182,60 @@ void Application::update()
 	}
 
 	// Update asteroids and check for collisions with bullets
-	for (auto& asteroid : m_asteroids)
+	for (auto& asteroid : arr_asteroids)
 	{
-		if (asteroid.isAlive())
+		if (asteroid->isAlive())
 		{
 			// Move the asteroid to its new position
-			asteroid.update();
+			asteroid->update();
 
 			// See if any of the (live) bullets are inside this asteroid
-			for (auto& bullet : m_bullets)
+			for (auto& bullet : arr_bullets)
 			{
-				if (bullet.isAlive() && asteroid.pointIsInside(bullet.getPosition()))
+				if (bullet != NULL)
 				{
-					// Shatter the asteroid by killing it and spawning some new ones
-					// roughly where it is
-					unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
-					for (unsigned i = 0; i < numFragments; ++i)
+					if ((bullet->getPosition() - asteroid->getPosition()).magnitudeSquared() < COLLISIONRANGE * COLLISIONRANGE)
 					{
-						Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
-						vel.normalise();
-						vel *= (rand() % 5) / 8 + 0.2f;
+						if (bullet->isAlive() && asteroid->pointIsInside(bullet->getPosition()))
+						{
+							// Shatter the asteroid by killing it and spawning some new ones
+							// roughly where it is
+							unsigned numFragments = rand() % (c_maxFragments - 2) + 2;
+							for (unsigned i = 0; i < numFragments; ++i)
+							{
+								// Only add new asteroids if we are below the cap
+								if (asteroidCount < MAXASTEROIDS)
+								{
+									Vector2D vel(float(rand() % 100) / 50.0f - 1.0f, float(rand() % 100) / 50.0f - 1.0f);
+									vel.normalise();
+									vel *= (rand() % 5) / 8 + 0.2f;
 
-						Point2D pos = asteroid.getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid.getScale();
-						spawnAsteroid(pos, vel, asteroid.getScale() / float(numFragments-1));
+									Point2D pos = asteroid->getPosition() + Vector2D(float(rand() % 10) / 5.0f - 1.0f, float(rand() % 10) / 5.0f - 1.0f) * asteroid->getScale();
+									spawnAsteroid(pos, vel, asteroid->getScale() / float(numFragments-1));
+								}
+							}
+
+							asteroid->kill();
+							bullet->kill();
+
+							break;
+						}
 					}
 
-					asteroid.kill();
-					bullet.kill();
-					break;
+					// If bullet is offscreen, destroy it - I am aware of the existence of isOffScreen(), but I believe this implementation is equally suitable
+					if (bullet->getPosition().x < 0 || bullet->getPosition().y < 0 || bullet->getPosition().x > c_windowWidth || bullet->getPosition().y > c_windowHeight)
+						bullet->kill();
 				}
 			}
+
+			// If asteroid is offscreen, destroy it
+			if (asteroid->getPosition().x < 0 || asteroid->getPosition().y < 0 || asteroid->getPosition().x > c_windowWidth || asteroid->getPosition().y > c_windowHeight)
+				asteroid->kill();
 		}
 	}
+
+	// Perform garbage collection on bullets/asteroids marked as 'dead'
+	cleaup();
 }
 
 // Render the scene
@@ -212,25 +249,81 @@ void Application::render()
 	m_player.draw(m_renderer);
 
 	SDL_SetRenderDrawColor(m_renderer, 255, 255, 0, 255);
-	for (const auto& bullet : m_bullets)
-		bullet.draw(m_renderer);
+	for (int i = 0; i < MAXBULLETS; i++)
+	{
+		if (arr_bullets[i] != NULL)
+		{
+			arr_bullets[i]->draw(m_renderer);
+		}
+	}
 
 	SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 255);
-	for (const auto& asteroid : m_asteroids)
-		asteroid.draw(m_renderer);
+	for (int i = 0; i < MAXASTEROIDS; i++)
+	{
+		if (arr_asteroids[i] != NULL)
+		{
+			arr_asteroids[i]->draw(m_renderer);
+		}
+	}
 }
 
 void Application::shoot(float speed)
 {
-	Bullet bullet(m_player.getGunPosition(), m_player.getDirection() * (m_player.getSpeed() + speed));
-	m_bullets.push_back(bullet);
+	for (int i = 0; i < MAXBULLETS; i++)
+	{
+		// Replace a null pointer with a new bullet
+		if (arr_bullets[i] == NULL)
+		{
+			bulletCount++;
+			arr_bullets[i] = new Bullet(m_player.getGunPosition(), m_player.getDirection() * (m_player.getSpeed() + speed));
+			return;
+		}
+	}
 }
 
 void Application::spawnAsteroid(Point2D pos, Vector2D vel, float maxScale)
 {
-	Asteroid asteroid(pos, vel, float(rand() % 10) * maxScale / 15.0f + maxScale * 0.25f,
-		float(rand() % 10) * c_asteroidMaxRotationSpeed / 5.0f - c_asteroidMaxRotationSpeed);
-	m_asteroids.push_back(asteroid);
+	for (int i = 0; i < MAXASTEROIDS; i++)
+	{
+		// Replace a null pointer witha  new asteroid
+		if (arr_asteroids[i] == NULL)
+		{
+			asteroidCount++;
+			arr_asteroids[i] = new Asteroid(pos, vel, float(rand() % 10) * maxScale / 15.0f + maxScale * 0.25f,
+				float(rand() % 10) * c_asteroidMaxRotationSpeed / 5.0f - c_asteroidMaxRotationSpeed);;
+			return;
+		}
+	}
+}
+
+// Iterate through all asteroids and bullets and delete those that have been marked as 'dead'
+void Application::cleaup()
+{
+	for (int i = 0; i < MAXASTEROIDS; i++)
+	{
+		if (arr_asteroids[i] != nullptr)
+		{
+			if (!arr_asteroids[i]->isAlive())
+			{
+				delete arr_asteroids[i];
+				arr_asteroids[i] = NULL;
+				asteroidCount--;
+			}
+		}
+	}
+
+	for (int i = 0; i < MAXBULLETS; i++)
+	{
+		if (arr_bullets[i] != nullptr)
+		{
+			if (!arr_bullets[i]->isAlive())
+			{
+				delete arr_bullets[i];
+				arr_bullets[i] = NULL;
+				bulletCount--;
+			}
+		}
+	}
 }
 
 bool Application::isOffscreen(const Drifter * drifter) const
